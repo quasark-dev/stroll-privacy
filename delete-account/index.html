@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="theme-color" content="#1E3A2B" />
+  <title>Delete your account · Stroll</title>
+
+  <script>
+    const CONFIG = {
+      logoPath: '../assets/stroll-logo.png',
+
+      supportEmail: 'strollaroundworld@gmail.com',
+
+      // Show a "Continue with Google" button
+      googleSignIn: false,
+
+      // Supabase (the anon key is meant to be public).
+      supabaseUrl: 'https://jmbijbgwainbizyvftww.supabase.co',
+      supabaseAnonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImptYmlqYmd3YWluYml6eXZmdHd3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU2ODgzNjAsImV4cCI6MjEwMTI2NDM2MH0.W17eHj6TEzOpD_WoIAoX-dpgjvft5LByO1C_B8MA2iE',
+    };
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Comic+Relief:wght@700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="icon" id="favicon" href="data:," />
+
+  <style>
+    /* The colours and shapes of the app. */
+    :root {
+      --primary: #1E3A2B;
+      --secondary: #A1CEBA;
+      --bg: #F6F6F6;
+      --card: #FFFFFF;
+      --field: #FFFFFF;
+      --ink: #0F1419;
+      --muted: #536471;
+      --line: #E1E8ED;
+      --accent: #1E3A2B;          /* green for text and outlines on the page */
+      --btn-bg: #1E3A2B;          /* main button */
+      --btn-ink: #A1CEBA;
+      --danger: #ED3E31;
+      --danger-hover: #D2342A;
+      --danger-ink: #B3261E;
+      --danger-bg: rgba(237, 62, 49, .08);
+      --danger-line: rgba(237, 62, 49, .35);
+      --ok-bg: rgba(161, 206, 186, .35);
+      --bar-line: rgba(161, 206, 186, .35);
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #121613;
+        --card: #1C211E;
+        --field: #262C28;
+        --ink: #E8EDE9;
+        --muted: #8B98A5;
+        --line: #2F3631;
+        --accent: #A1CEBA;
+        --btn-bg: #A1CEBA;
+        --btn-ink: #101412;
+        --danger-ink: #FF8A80;
+        --danger-bg: rgba(237, 62, 49, .14);
+        --danger-line: rgba(237, 62, 49, .5);
+        --ok-bg: rgba(161, 206, 186, .16);
+      }
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { -webkit-text-size-adjust: 100%; }
+
+    body {
+      font-family: "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      letter-spacing: -.01em;
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* The bar at the top, like the app's: dark green, logo in the middle. */
+    .bar {
+      background: var(--primary);
+      border-bottom: 1px solid var(--bar-line);
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: none;
+    }
+    .bar img { height: 42px; width: auto; display: block; }
+    .wordmark {
+      display: none;                       /* shown only if the logo can't load */
+      font-family: "Comic Relief", "Roboto", sans-serif;
+      font-weight: 700;
+      font-size: 28px;
+      color: var(--secondary);
+    }
+    .bar.no-logo img { display: none; }
+    .bar.no-logo .wordmark { display: block; }
+
+    main {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 28px 16px 24px;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 440px;
+      background: var(--card);
+      border: 2px solid var(--accent);
+      border-radius: 22px;
+      padding: 28px 24px 24px;
+    }
+
+    h1 {
+      font-family: "Comic Relief", "Roboto", sans-serif;
+      font-weight: 700;
+      font-size: 1.6rem;
+      line-height: 1.2;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+    .lead {
+      font-size: .95rem;
+      line-height: 1.5;
+      color: var(--muted);
+      margin-bottom: 22px;
+    }
+
+    label {
+      display: block;
+      font-size: .85rem;
+      font-weight: 500;
+      margin-bottom: 6px;
+    }
+
+    /* Fields look like the app's: thick green outline, rounded. */
+    input[type="email"], input[type="password"] {
+      width: 100%;
+      height: 48px;
+      padding: 0 14px;
+      font: inherit;
+      font-size: 1rem;
+      color: var(--ink);
+      background: var(--field);
+      border: 2px solid var(--accent);
+      border-radius: 14px;
+      margin-bottom: 14px;
+      outline: none;
+    }
+    input::placeholder { color: var(--muted); opacity: .7; }
+    input:focus-visible { box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 30%, transparent); }
+
+    .notice {
+      background: var(--danger-bg);
+      border: 1.5px solid var(--danger-line);
+      border-radius: 14px;
+      padding: 12px 14px;
+      font-size: .875rem;
+      line-height: 1.5;
+      color: var(--danger-ink);
+      margin: 4px 0 20px;
+    }
+    .notice strong { display: block; font-weight: 700; margin-bottom: 2px; }
+
+    /* Buttons: round ends, like the app's. */
+    .btn {
+      width: 100%;
+      min-height: 48px;
+      padding: 0 20px;
+      border: 2px solid transparent;
+      border-radius: 999px;
+      font: inherit;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      text-decoration: none;
+      transition: background-color .15s, opacity .15s;
+    }
+    .btn:disabled { opacity: .55; cursor: not-allowed; }
+    .btn:focus-visible { outline: 3px solid color-mix(in srgb, var(--accent) 45%, transparent); outline-offset: 2px; }
+
+    .btn-main   { background: var(--btn-bg); color: var(--btn-ink); }
+    .btn-danger { background: var(--danger); color: #fff; }
+    .btn-danger:hover:not(:disabled) { background: var(--danger-hover); }
+    .btn-outline {
+      background: transparent;
+      color: var(--accent);
+      border-color: var(--accent);
+      margin-top: 10px;
+    }
+    .btn-outline:hover:not(:disabled) { background: color-mix(in srgb, var(--accent) 10%, transparent); }
+
+    .or {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 16px 0 6px;
+      color: var(--muted);
+      font-size: .85rem;
+    }
+    .or::before, .or::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+
+    .message {
+      display: none;
+      margin-top: 14px;
+      padding: 11px 14px;
+      border-radius: 14px;
+      font-size: .9rem;
+      line-height: 1.45;
+    }
+    .message.error {
+      display: block;
+      background: var(--danger-bg);
+      color: var(--danger-ink);
+      border: 1.5px solid var(--danger-line);
+    }
+
+    .who {
+      font-weight: 700;
+      font-size: 1rem;
+      word-break: break-all;
+      margin: 0 0 20px;
+      padding: 12px 14px;
+      background: var(--field);
+      border: 1.5px solid var(--line);
+      border-radius: 14px;
+    }
+
+    [hidden] { display: none !important; }
+
+    .done { text-align: center; padding: 8px 0 4px; }
+    .done-mark {
+      width: 64px; height: 64px;
+      margin: 0 auto 16px;
+      border-radius: 50%;
+      background: var(--ok-bg);
+      display: grid;
+      place-items: center;
+      color: var(--accent);
+    }
+    .done .lead { margin-bottom: 0; }
+
+    .spinner {
+      width: 16px; height: 16px;
+      border: 2.5px solid currentColor;
+      border-right-color: transparent;
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+      flex: none;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @media (prefers-reduced-motion: reduce) {
+      .spinner { animation-duration: 2s; }
+      .btn { transition: none; }
+    }
+
+    footer {
+      text-align: center;
+      font-size: .8rem;
+      color: var(--muted);
+      padding: 0 16px 24px;
+    }
+    footer a { color: var(--accent); }
+
+    @media (max-width: 380px) {
+      .card { padding: 24px 18px 20px; border-radius: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="bar" id="bar">
+    <img data-logo alt="Stroll" />
+    <span class="wordmark" aria-hidden="true">Stroll</span>
+  </header>
+
+  <main>
+    <div class="card">
+
+      <!-- Step 1: sign in -->
+      <section id="step-login" aria-labelledby="login-title">
+        <h1 id="login-title">Delete your account</h1>
+        <p class="lead">Sign in first, so we know the account is yours. Deleting it is permanent.</p>
+
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="you@example.com" autocomplete="email" />
+
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="Your password" autocomplete="current-password" />
+
+        <div class="notice">
+          <strong>This deletes for good:</strong>
+          your profile, routes, posts, messages and everything else in your account.
+        </div>
+
+        <button class="btn btn-main" id="btn-login" type="button">Continue</button>
+
+        <div id="google-block" hidden>
+          <div class="or">or</div>
+          <button class="btn btn-outline" id="btn-google" type="button" style="margin-top:0">Continue with Google</button>
+        </div>
+
+        <div class="message" id="login-msg" role="alert"></div>
+      </section>
+
+      <!-- Step 2: confirm -->
+      <section id="step-confirm" aria-labelledby="confirm-title" hidden>
+        <h1 id="confirm-title">Delete this account?</h1>
+        <p class="lead">You are about to delete the Stroll account of</p>
+        <p class="who" id="confirm-email"></p>
+
+        <div class="notice">
+          <strong>This can't be undone.</strong>
+          Your data is deleted right away and can't be brought back.
+        </div>
+
+        <button class="btn btn-danger" id="btn-delete" type="button">Delete my account</button>
+        <button class="btn btn-outline" id="btn-cancel" type="button">Keep my account</button>
+
+        <div class="message" id="delete-msg" role="alert"></div>
+      </section>
+
+      <!-- Step 3: done -->
+      <section id="step-done" class="done" aria-labelledby="done-title" hidden>
+        <div class="done-mark" aria-hidden="true">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+        </div>
+        <h1 id="done-title">Account deleted</h1>
+        <p class="lead">
+          Your Stroll account and everything in it have been deleted.
+          You are welcome to join again any time.
+        </p>
+      </section>
+
+    </div>
+  </main>
+
+  <footer>
+    Need help? <a id="support-link" href="#">Contact support</a>
+  </footer>
+
+  <!-- Supabase JS (from a CDN: there is nothing to build) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script>
+    // ── Logo, favicon and support link come from CONFIG ───────────────────────
+    const bar = document.getElementById('bar');
+    document.querySelectorAll('[data-logo]').forEach((img) => {
+      img.addEventListener('error', () => bar.classList.add('no-logo'));
+      img.src = CONFIG.logoPath;
+    });
+    document.getElementById('favicon').href = CONFIG.logoPath;
+    document.getElementById('support-link').href = 'mailto:' + CONFIG.supportEmail;
+
+    const sb = window.supabase.createClient(CONFIG.supabaseUrl, CONFIG.supabaseAnonKey);
+    let sessionToken = null;
+
+    // ── Small helpers ─────────────────────────────────────────────────────────
+    const $ = (id) => document.getElementById(id);
+
+    function showMsg(id, text) {
+      const el = $(id);
+      el.textContent = text;
+      el.className = 'message error';
+    }
+    function hideMsg(id) { $(id).className = 'message'; }
+
+    function setLoading(btn, loading, label) {
+      btn.disabled = loading;
+      btn.replaceChildren();
+      if (loading) {
+        const spinner = document.createElement('span');
+        spinner.className = 'spinner';
+        btn.append(spinner, label);
+      } else {
+        btn.textContent = label;
+      }
+    }
+
+    function show(step) {
+      for (const id of ['step-login', 'step-confirm', 'step-done']) {
+        $(id).hidden = id !== step;
+      }
+      const heading = $(step).querySelector('h1');
+      if (heading) { heading.setAttribute('tabindex', '-1'); heading.focus({ preventScroll: true }); }
+    }
+
+    function goToConfirm(session) {
+      sessionToken = session.access_token;
+      $('confirm-email').textContent = session.user.email || 'your Google account';
+      show('step-confirm');
+    }
+
+    function friendly(error) {
+      const text = (error && error.message) || 'Something went wrong. Try again.';
+      if (/invalid login credentials/i.test(text)) {
+        return "That email and password don't match. Check them and try again.";
+      }
+      if (/failed to fetch|networkerror/i.test(text)) {
+        return 'No connection to the server. Check your internet and try again.';
+      }
+      return text;
+    }
+
+    // ── Step 1: sign in ───────────────────────────────────────────────────────
+    $('btn-login').addEventListener('click', async () => {
+      const email = $('email').value.trim();
+      const password = $('password').value;
+      hideMsg('login-msg');
+
+      if (!email || !password) {
+        showMsg('login-msg', 'Enter your email and your password.');
+        return;
+      }
+
+      const btn = $('btn-login');
+      setLoading(btn, true, 'Signing in…');
+      const { data, error } = await sb.auth.signInWithPassword({ email, password });
+      setLoading(btn, false, 'Continue');
+
+      if (error) {
+        showMsg('login-msg', friendly(error));
+        return;
+      }
+      $('password').value = '';
+      goToConfirm(data.session);
+    });
+
+    $('password').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') $('btn-login').click();
+    });
+
+    // ── Google (optional) ─────────────────────────────────────────────────────
+    if (CONFIG.googleSignIn) {
+      $('google-block').hidden = false;
+
+      $('btn-google').addEventListener('click', async () => {
+        hideMsg('login-msg');
+        const { error } = await sb.auth.signInWithOAuth({
+          provider: 'google',
+          options: { redirectTo: location.origin + location.pathname },
+        });
+        if (error) showMsg('login-msg', friendly(error));
+      });
+
+      // Back from Google: the address carries the sign-in. 
+      if (location.hash.includes('access_token') || location.search.includes('code=')) {
+        sb.auth.getSession().then(({ data }) => {
+          if (data.session) {
+            history.replaceState(null, '', location.pathname);
+            goToConfirm(data.session);
+          }
+        });
+      }
+    }
+
+    // ── Step 2: keep the account ──────────────────────────────────────────────
+    $('btn-cancel').addEventListener('click', async () => {
+      await sb.auth.signOut();
+      sessionToken = null;
+      hideMsg('delete-msg');
+      show('step-login');
+    });
+
+    // ── Step 2: delete the account ────────────────────────────────────────────
+    $('btn-delete').addEventListener('click', async () => {
+      hideMsg('delete-msg');
+      const btn = $('btn-delete');
+      $('btn-cancel').disabled = true;
+      setLoading(btn, true, 'Deleting…');
+
+      try {
+        const res = await fetch(`${CONFIG.supabaseUrl}/functions/v1/delete-account`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${sessionToken}`,
+          },
+        });
+
+        let body = {};
+        try { body = await res.json(); } catch (_) { /* no JSON in the answer */ }
+
+        if (!res.ok) {
+          throw new Error(body.error || `The server answered with error ${res.status}.`);
+        }
+
+        await sb.auth.signOut().catch(() => {});
+        sessionToken = null;
+        show('step-done');
+      } catch (err) {
+        showMsg('delete-msg', friendly(err));
+        setLoading(btn, false, 'Delete my account');
+        $('btn-cancel').disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
