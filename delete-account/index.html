@@ -10,6 +10,7 @@
   <script>
     const CONFIG = {
       logoPath: '../assets/stroll-logo.png',
+      minimalLogoPath: '../assets/stroll-logo-minimal-fat.svg',
 
       supportEmail: 'strollaroundworld@gmail.com',
 
@@ -92,7 +93,8 @@
       justify-content: center;
       flex: none;
     }
-    .bar img { height: 42px; width: auto; display: block; }
+    .bar img { height: 42px; width: auto; max-width: 70vw; display: block; }
+
     .wordmark {
       display: none;                       /* shown only if the logo can't load */
       font-family: "Comic Relief", "Roboto", sans-serif;
@@ -283,7 +285,7 @@
 <body>
 
   <header class="bar" id="bar">
-    <img data-logo alt="Stroll" />
+    <img data-logo-minimal alt="Stroll" />
     <span class="wordmark" aria-hidden="true">Stroll</span>
   </header>
 
@@ -360,6 +362,10 @@
     document.querySelectorAll('[data-logo]').forEach((img) => {
       img.addEventListener('error', () => bar.classList.add('no-logo'));
       img.src = CONFIG.logoPath;
+    });
+    document.querySelectorAll('[data-logo-minimal]').forEach((img) => {
+      img.addEventListener('error', () => bar.classList.add('no-logo'));
+      img.src = CONFIG.minimalLogoPath;
     });
     document.getElementById('favicon').href = CONFIG.logoPath;
     document.getElementById('support-link').href = 'mailto:' + CONFIG.supportEmail;

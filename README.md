@@ -5,5 +5,8 @@ This repository contains the publicly accessible Privacy Policy for **Stroll**, 
 Read the policy online:
 https://vladzghur.github.io/stroll-privacy/
 
-For privacy-related questions, contact:
+To delete your account online:
+https://vladzghur.github.io/stroll-privacy/delete-account/
+
+For any questions, contact:
 strollaroundworld@gmail.com
